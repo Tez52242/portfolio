@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" width="1280" height="800">
+<rect width="1280" height="800" fill="#eef1f6"/>
+<rect x="102.4" y="112.00000000000001" width="1075.2" height="576.0" rx="14" fill="none" stroke="#34415c" stroke-width="3"/>
+<rect x="102.4" y="112.00000000000001" width="1075.2" height="80.0" rx="14" fill="#34415c" opacity=".18"/>
+<text x="640.0" y="416.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="72.0" font-weight="700" fill="#34415c">Скриншот</text>
+<text x="640.0" y="512.0" text-anchor="middle" font-family="system-ui,sans-serif" font-size="36.0" fill="#34415c" opacity=".8">Замените на свой файл</text>
+</svg>

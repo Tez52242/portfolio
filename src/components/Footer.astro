@@ -1,0 +1,26 @@
+---
+import { profile } from '../data/profile';
+import { ui } from '../data/ui';
+import { withBase } from '../lib/url';
+
+const year = new Date().getFullYear();
+const links = [
+  { href: '/#projects', label: ui.nav.projects },
+  { href: '/#contact', label: ui.nav.contact },
+];
+---
+
+<footer class="mt-24 border-t border-line">
+  <div class="container-page flex flex-col gap-6 py-10 text-sm text-muted md:flex-row md:items-center md:justify-between">
+    <p>© {year} {profile.name}. {ui.footer.rights}</p>
+    <nav aria-label="Ссылки в подвале">
+      <ul class="flex flex-wrap items-center gap-x-5 gap-y-2">
+        {links.map((l) => (<li><a class="hover:text-ink" href={withBase(l.href)}>{l.label}</a></li>))}
+        {profile.socials.map((s) => (
+          <li><a class="hover:text-ink" href={s.url} rel="me noopener" target="_blank">{s.label}<span class="sr-only"> (откроется в новой вкладке)</span></a></li>
+        ))}
+        <li><a class="hover:text-ink" href="#top">{ui.footer.top}</a></li>
+      </ul>
+    </nav>
+  </div>
+</footer>

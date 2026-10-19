@@ -1,0 +1,32 @@
+---
+import { profile } from '../../data/profile';
+import { ui } from '../../data/ui';
+import { withBase } from '../../lib/url';
+import Section from '../Section.astro';
+---
+
+<Section id="contact" title={ui.sections.contact}>
+  <p class="max-w-[34rem] text-lg text-muted">{ui.contact.lead}</p>
+  <p class="mt-6">
+    <a
+      href={`mailto:${profile.email}`}
+      class="break-all text-[clamp(1.5rem,5vw,2.5rem)] font-semibold tracking-tight underline decoration-accent decoration-2 underline-offset-[0.2em] hover:text-accent"
+    >{profile.email}</a>
+  </p>
+  {
+    (profile.socials.length > 0 || profile.resume) && (
+      <ul class="mt-8 flex flex-wrap gap-3" aria-label={ui.contact.elsewhere}>
+        {profile.socials.map((s) => (
+          <li>
+            <a class="btn btn-secondary" href={s.url} target="_blank" rel="me noopener">
+              {s.label}<span class="sr-only"> (откроется в новой вкладке)</span>
+            </a>
+          </li>
+        ))}
+        {profile.resume && (
+          <li><a class="btn btn-secondary" href={withBase(profile.resume.url)}>{profile.resume.label}</a></li>
+        )}
+      </ul>
+    )
+  }
+</Section>

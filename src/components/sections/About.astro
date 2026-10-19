@@ -1,0 +1,18 @@
+---
+import { profile } from '../../data/profile';
+import { ui } from '../../data/ui';
+import Section from '../Section.astro';
+---
+
+<Section id="about" title={ui.sections.about}>
+  <div class="max-w-[40rem] space-y-5 text-lg">
+    {profile.about.map((p) => (<p>{p}</p>))}
+  </div>
+  {
+    profile.specialization.length > 0 && (
+      <ul class="mt-8 flex flex-wrap gap-2">
+        {profile.specialization.map((s) => (<li class="tag">{s}</li>))}
+      </ul>
+    )
+  }
+</Section>

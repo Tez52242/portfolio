@@ -1,0 +1,24 @@
+---
+import { skills } from '../../data/skills';
+import { ui } from '../../data/ui';
+import Section from '../Section.astro';
+---
+
+{
+  skills.length > 0 && (
+    <Section id="skills" title={ui.sections.skills}>
+      <dl class="grid gap-x-8 gap-y-8 sm:grid-cols-2">
+        {skills.map((g) => (
+          <div>
+            <dt class="text-lg font-semibold">{g.category}</dt>
+            <dd class="mt-3">
+              <ul class="flex flex-wrap gap-2">
+                {g.items.map((i) => (<li class="tag">{i}</li>))}
+              </ul>
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </Section>
+  )
+}

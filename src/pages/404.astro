@@ -1,0 +1,14 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { ui } from '../data/ui';
+import { withBase } from '../lib/url';
+---
+
+<BaseLayout title={ui.notFound.title} noindex>
+  <div class="container-page py-24 md:py-32">
+    <p class="text-[clamp(4rem,16vw,10rem)] font-bold leading-none tracking-[-0.05em] text-accent" aria-hidden="true">404</p>
+    <h1 class="mt-4 text-3xl font-semibold tracking-tight">{ui.notFound.title}</h1>
+    <p class="mt-3 max-w-[32rem] text-lg text-muted">{ui.notFound.text}</p>
+    <p class="mt-8"><a class="btn btn-primary" href={withBase('/')}>{ui.notFound.home}</a></p>
+  </div>
+</BaseLayout>

@@ -1,0 +1,91 @@
+---
+import '../styles/global.css';
+import { profile } from '../data/profile';
+import { experience, education } from '../data/experience';
+import { ui } from '../data/ui';
+import { getImage } from 'astro:assets';
+import fontCyrillic from '@fontsource-variable/onest/files/onest-cyrillic-wght-normal.woff2?url';
+import fontLatin from '@fontsource-variable/onest/files/onest-latin-wght-normal.woff2?url';
+import { absoluteUrl, withBase } from '../lib/url';
+import { loadImage, publicFileExists } from '../lib/images';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown>;
+}
+
+const { title, description = profile.seoDescription, image, type = 'website', noindex = false, jsonLd } = Astro.props;
+
+const fullTitle = title ? `${title} — ${profile.name}` : `${profile.name} — ${profile.role}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? 'http://localhost:4321').toString();
+// Превью для соцсетей: обложка страницы (кадрируется до 1200×630 в JPG) или profile.ogImage из public/.
+// SVG соцсети не показывают, поэтому он не подходит.
+let ogImage: string | undefined;
+const cover = await loadImage(image);
+if (cover && cover.format !== 'svg') {
+  const og = await getImage({ src: cover, width: 1200, height: 630, fit: 'cover', format: 'jpg' });
+  ogImage = new URL(og.src, Astro.site ?? 'http://localhost:4321').toString();
+} else if (profile.ogImage && /\.(png|jpe?g|webp)$/i.test(profile.ogImage) && publicFileExists(profile.ogImage)) {
+  ogImage = absoluteUrl(profile.ogImage, Astro.site);
+}
+const hasExperience = experience.length + education.length > 0;
+---
+
+<!doctype html>
+<html lang={profile.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <link rel="icon" type="image/svg+xml" href={withBase('/favicon.svg')} />
+    <link rel="preload" href={fontCyrillic} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={fontLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="sitemap" href={withBase('/sitemap-index.xml')} />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={profile.name} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta name="twitter:card" content={ogImage ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
+    <meta name="generator" content={Astro.generator} />
+
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+
+    <!-- Тема применяется до отрисовки, чтобы не было вспышки -->
+    <script is:inline>
+      (function () {
+        var t = null;
+        try { t = localStorage.getItem('theme'); } catch (e) {}
+        if (t !== 'light' && t !== 'dark') {
+          t = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        document.documentElement.dataset.theme = t;
+      })();
+    </script>
+  </head>
+  <body id="top">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-ink focus:px-4 focus:py-2 focus:text-bg"
+    >{ui.skipToContent}</a>
+    <Header hasExperience={hasExperience} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

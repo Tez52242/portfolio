@@ -1,0 +1,30 @@
+---
+import { profile } from '../data/profile';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/sections/Hero.astro';
+import About from '../components/sections/About.astro';
+import Skills from '../components/sections/Skills.astro';
+import Projects from '../components/sections/Projects.astro';
+import Experience from '../components/sections/Experience.astro';
+import Contact from '../components/sections/Contact.astro';
+import { absoluteUrl } from '../lib/url';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  jobTitle: profile.role,
+  url: absoluteUrl('/', Astro.site),
+  email: `mailto:${profile.email}`,
+  sameAs: profile.socials.map((s) => s.url),
+};
+---
+
+<BaseLayout jsonLd={jsonLd}>
+  <Hero />
+  <About />
+  <Skills />
+  <Projects />
+  <Experience />
+  <Contact />
+</BaseLayout>

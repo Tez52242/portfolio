@@ -1,0 +1,20 @@
+---
+import { getHomeProjects } from '../../lib/projects';
+import { ui } from '../../data/ui';
+import { withBase } from '../../lib/url';
+import Section from '../Section.astro';
+import ProjectGrid from '../ProjectGrid.astro';
+
+const { shown, total } = await getHomeProjects();
+---
+
+<Section id="projects" title={ui.sections.projects}>
+  <ProjectGrid projects={shown} />
+  {
+    total > shown.length && (
+      <p class="mt-8">
+        <a class="btn btn-secondary" href={withBase('/projects/')}>{ui.projects.all}</a>
+      </p>
+    )
+  }
+</Section>

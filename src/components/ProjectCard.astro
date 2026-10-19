@@ -1,0 +1,88 @@
+
+---
+import type { Project } from '../lib/projects';
+import { withBase } from '../lib/url';
+import { ui } from '../data/ui';
+import ProjectImage from './ProjectImage.astro';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+const { data } = project;
+---
+
+<article class="group relative flex flex-col overflow-hidden rounded-xl border border-line bg-surface transition-colors hover:border-accent focus-within:border-accent">
+  <div class="aspect-[16/10] overflow-hidden border-b border-line">
+    <ProjectImage
+      src={data.cover}
+      alt={data.coverAlt ?? ''}
+      fallbackLabel={data.title}
+    />
+  </div>
+
+  <div class="flex flex-1 flex-col gap-3 p-5">
+    <div class="flex items-baseline justify-between gap-3">
+      <h3 class="text-xl font-semibold leading-snug tracking-tight">
+        <a
+          href={withBase(`/projects/${project.id}/`)}
+          class="after:absolute after:inset-0 after:content-[''] focus-visible:outline-offset-[-3px]"
+        >
+          {data.title}
+        </a>
+      </h3>
+
+      {data.date && (
+        <span class="shrink-0 text-sm text-muted">
+          {data.date.getFullYear()}
+        </span>
+      )}
+    </div>
+
+    <p class="text-muted">{data.summary}</p>
+
+    {data.draft && (
+      <p class="text-sm font-medium text-accent">
+        {ui.projects.draft}
+      </p>
+    )}
+
+    {data.technologies.length > 0 && (
+      <ul
+        class="flex flex-wrap gap-2 pt-2"
+        aria-label={ui.projects.technologies}
+      >
+        {data.technologies.map((technology) => (
+          <li class="tag">{technology}</li>
+        ))}
+      </ul>
+    )}
+
+    {data.links.steam && (
+      <div class="relative z-10 mt-auto pt-2">
+        <a
+          href={data.links.steam}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-secondary inline-flex"
+        >
+          Играть в Steam
+        </a>
+      </div>
+    )}
+
+    {data.links.itchio && (
+      <div class="relative z-10 mt-auto pt-2">
+        <a
+          href={data.links.itchio}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-secondary inline-flex"
+        >
+          Играть в itch.io
+        </a>
+      </div>
+    )}
+  </div>
+</article>

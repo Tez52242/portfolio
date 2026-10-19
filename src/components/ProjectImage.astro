@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import { loadImage } from '../lib/images';
+import { ui } from '../data/ui';
+
+interface Props {
+  /** Путь относительно src/assets/images/ */
+  src?: string;
+  alt?: string;
+  /** Подпись для заглушки, если файла нет */
+  fallbackLabel: string;
+  class?: string;
+  /** true — для главной картинки страницы (загружается сразу и с приоритетом) */
+  eager?: boolean;
+  widths?: number[];
+  sizes?: string;
+}
+const {
+  src,
+  alt = '',
+  fallbackLabel,
+  class: className = '',
+  eager = false,
+  widths = [480, 800, 1120],
+  sizes = '(min-width: 1152px) 560px, (min-width: 640px) 50vw, 100vw',
+} = Astro.props;
+const image = await loadImage(src);
+---
+
+{
+  image && image.format === 'svg' ? (
+    <img
+      src={image.src}
+      alt={alt}
+      width={image.width}
+      height={image.height}
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      class:list={['h-full w-full object-cover', className]}
+    />
+  ) : image ? (
+    <Image
+      src={image}
+      alt={alt}
+      width={Math.max(...widths)}
+      widths={widths}
+      sizes={sizes}
+      format="webp"
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      decoding="async"
+      class:list={['h-full w-full object-cover', className]}
+    />
+  ) : (
+    <div
+      class:list={['flex h-full w-full flex-col items-center justify-center gap-1 bg-accent-soft p-4 text-center', className]}
+    >
+      <span class="text-lg font-semibold tracking-tight">{fallbackLabel}</span>
+      <span class="text-sm text-muted">{ui.imageMissing}</span>
+    </div>
+  )
+}

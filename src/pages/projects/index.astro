@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectGrid from '../../components/ProjectGrid.astro';
+import { getProjects } from '../../lib/projects';
+import { ui } from '../../data/ui';
+
+const projects = await getProjects();
+---
+
+<BaseLayout title={ui.projects.allTitle}>
+  <div class="container-page py-14 md:py-20">
+    <h1 class="mb-10 text-[clamp(2.25rem,6vw,4rem)] font-bold leading-none tracking-[-0.03em]">{ui.projects.allTitle}</h1>
+    <ProjectGrid projects={projects} />
+  </div>
+</BaseLayout>

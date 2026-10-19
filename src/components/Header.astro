@@ -1,0 +1,66 @@
+---
+import { profile } from '../data/profile';
+import { ui } from '../data/ui';
+import { withBase } from '../lib/url';
+import ThemeToggle from './ThemeToggle.astro';
+
+interface Props { hasExperience?: boolean }
+const { hasExperience = false } = Astro.props;
+
+const links = [
+  { href: '/#about', label: ui.nav.about },
+  { href: '/#skills', label: ui.nav.skills },
+  { href: '/#projects', label: ui.nav.projects },
+  ...(hasExperience ? [{ href: '/#experience', label: ui.nav.experience }] : []),
+  { href: '/#contact', label: ui.nav.contact },
+];
+---
+
+<header class="sticky top-0 z-40 border-b border-line bg-bg">
+  <div class="container-page flex h-16 items-center justify-between gap-4">
+    <a href={withBase('/')} class="font-semibold tracking-tight">{profile.name}</a>
+
+    <div class="flex items-center gap-2">
+      <nav aria-label="Основная навигация" class="hidden md:block">
+        <ul class="flex items-center gap-1">
+          {links.map((l) => (
+            <li>
+              <a href={withBase(l.href)} class="rounded-md px-3 py-2 text-sm text-muted transition-colors hover:text-ink">{l.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+      <ThemeToggle />
+      <button
+        type="button"
+        data-menu-button
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="inline-flex h-11 items-center rounded-lg border border-line px-4 text-sm font-medium md:hidden"
+      >{ui.menu}</button>
+    </div>
+  </div>
+
+  <nav id="mobile-menu" aria-label="Мобильная навигация" hidden class="border-t border-line md:hidden">
+    <ul class="container-page py-2">
+      {links.map((l) => (
+        <li><a href={withBase(l.href)} class="block py-3 text-lg">{l.label}</a></li>
+      ))}
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu-button]');
+  const menu = document.getElementById('mobile-menu');
+  function setOpen(open: boolean) {
+    if (!btn || !menu) return;
+    btn.setAttribute('aria-expanded', String(open));
+    menu.hidden = !open;
+  }
+  btn?.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+  menu?.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) setOpen(false); });
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && btn?.getAttribute('aria-expanded') === 'true') { setOpen(false); btn.focus(); }
+  });
+</script>

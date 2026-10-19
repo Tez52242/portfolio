@@ -1,0 +1,34 @@
+---
+import { profile } from '../../data/profile';
+import { ui } from '../../data/ui';
+import { withBase } from '../../lib/url';
+
+const facts = [profile.location, profile.availability].filter(Boolean) as string[];
+---
+
+<section aria-labelledby="hero-title" class="py-14 md:py-24">
+  <div class="container-page">
+    <div>
+      <h1 id="hero-title" class="text-[clamp(2.75rem,8.5vw,6.5rem)] font-bold leading-[0.95] tracking-[-0.04em]">
+        {profile.name}
+      </h1>
+
+      <p class="mt-5 text-xl font-medium text-accent md:text-2xl">{profile.role}</p>
+
+      <p class="mt-6 max-w-[34rem] text-lg text-muted">{profile.tagline}</p>
+
+      <div class="rise mt-9 flex flex-wrap gap-3" style="--i:1">
+        <a class="btn btn-primary" href={withBase('/#projects')}>{ui.hero.projects}</a>
+        <a class="btn btn-secondary" href={withBase('/#contact')}>{ui.hero.contact}</a>
+      </div>
+
+      {
+        facts.length > 0 && (
+          <ul class="rise mt-10 flex flex-wrap gap-x-8 gap-y-2 text-sm text-muted" style="--i:2">
+            {facts.map((f) => (<li>{f}</li>))}
+          </ul>
+        )
+      }
+    </div>
+  </div>
+</section>
